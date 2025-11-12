@@ -32,8 +32,8 @@ class Game:
       self.bg_img = pygame.Surface((WIDTH, HEIGHT))
       self.bg_img.fill(DARK_BG)
 
-    self.player = Player(WIDTH // 2, HEIGHT - 100, self.player_img)
-    self.boss = Boss(WIDTH // 2, 150, self.boss_img, self.bullet_img, difficulty)
+    self.player = Player(WIDTH // 2, HEIGHT - 100, self.player_img, self.bullet_img)
+    self.boss = Boss(WIDTH // 2, 150, self.boss_img, self.boss_bullet_img, difficulty)
     self.player_bullets = []
     self.enemy_bullets = []
     self.powerups = []
@@ -53,7 +53,7 @@ class Game:
     return surf
 
   def check_collision(self, obj1, obj2):
-    return obj1.distance_to(obj2) < (obj1.radius +obj2.radius)
+    return obj1.distance_to(obj2) < (obj1.radius + obj2.radius)
 
   def show_message(self, text):
     self.message = text

@@ -38,10 +38,10 @@ POWERUP_DURATION = 5.0  # 지속 시간(초)
 
 # 난이도
 DIFFICULTY_LEVELS = {
-  1: {"name": "EASY", "boss_hp": 100, "attack_speed": 3.0, "cooldown": 2.5},
-  2: {"name": "NORMAL", "boss_hp": 200, "attack_speed": 2.5, "cooldown": 2},
-  3: {"name": "HARD", "boss_hp": 300, "attack_speed": 2.0, "cooldown": 1},
-  4: {"name": "INSANE", "boss_hp": 500, "attack_speed": 1.5, "cooldown": 1}
+  1: {"name": "EASY", "boss_hp": 500, "attack_speed": 3.0, "cooldown": 2.5},
+  2: {"name": "NORMAL", "boss_hp": 1000, "attack_speed": 2.5, "cooldown": 2},
+  3: {"name": "HARD", "boss_hp": 2000, "attack_speed": 2.0, "cooldown": 1},
+  4: {"name": "INSANE", "boss_hp": 2000, "attack_speed": 1.5, "cooldown": 1}
 }
 
 # 점수

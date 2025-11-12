@@ -4,7 +4,7 @@ from src.utils.constants import *
 from .bullet import PlayerBullet
 
 class Player(GameObject):
-  def __init__(self, x, y, image):
+  def __init__(self, x, y, image, bullet_image):
     super().__init__(x, y)
     self.image = image
     self.radius = 3           # 층돌 처리용 반지름
@@ -15,6 +15,7 @@ class Player(GameObject):
     self.invincible_timer = 0
     self.power_level = 1      # 공격력
     self.slow_mode = False
+    self.bullet_image = bullet_image
 
   def update(self, dt, particles):
     mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -48,13 +49,13 @@ class Player(GameObject):
       self.shoot_cooldown = PLAYER_SHOOT_COOLDOWN
       bullets = []
       if self.power_level == 1:
-        bullets.append(PlayerBullet(self.x, self.y))
+        bullets.append(PlayerBullet(self.x, self.y, self.bullet_image))
       elif self.power_level == 2:
-        bullets.append(PlayerBullet(self.x - 8, self.y))
-        bullets.append(PlayerBullet(self.x + 8, self.y))
+        bullets.append(PlayerBullet(self.x - 8, self.y, self.bullet_image))
+        bullets.append(PlayerBullet(self.x + 8, self.y, self.bullet_image))
       else:
-        bullets.append(PlayerBullet(self.x, self.y))
-        bullets.append(PlayerBullet(self.x - 12, self.y, -0.2))
+        bullets.append(PlayerBullet(self.x, self.y, self.bullet_image))
+        bullets.append(PlayerBullet(self.x - 12, self.y, self.bullet_image, -0.2))
       return bullets
     return []
 
