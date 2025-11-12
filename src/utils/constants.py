@@ -21,7 +21,7 @@ PLAYER_SLOW_SPEED = 140
 PLAYER_HITBOX_RADIUS = 3
 PLAYER_SHOOT_COOLDOWN = 0.15  # 초당 약 6발
 PLAYER_MAX_HP = 3
-PLAYER_BOMB_COUNT = 3
+PLAYER_ITEM_COUNT = 3
 
 # 적/보스
 BOSS_ATTACK_COOLDOWN = 2.5
@@ -38,10 +38,10 @@ POWERUP_DURATION = 5.0  # 지속 시간(초)
 
 # 난이도
 DIFFICULTY_LEVELS = {
-  1: {"name": "EASY", "boss_hp": 500, "attack_speed": 3.0, "cooldown": 2.5},
-  2: {"name": "NORMAL", "boss_hp": 1000, "attack_speed": 2.5, "cooldown": 2},
-  3: {"name": "HARD", "boss_hp": 2000, "attack_speed": 2.0, "cooldown": 1},
-  4: {"name": "INSANE", "boss_hp": 2000, "attack_speed": 1.5, "cooldown": 1}
+  1: {"name": "EASY", "boss_hp": 200, "attack_speed": 3.0, "cooldown": 2.5, "boss_count": 1},
+  2: {"name": "NORMAL", "boss_hp": 250, "attack_speed": 2.5, "cooldown": 2, "boss_count": 1},
+  3: {"name": "HARD", "boss_hp": 250, "attack_speed": 2.0, "cooldown": 1, "boss_count": 2},
+  4: {"name": "INSANE", "boss_hp": 350, "attack_speed": 1.5, "cooldown": 1, "boss_count": 2}
 }
 
 # 점수

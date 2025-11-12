@@ -8,7 +8,7 @@ class Bullet(GameObject):
     self.speed = speed
     self.angle = angle
     self.image = image
-    self.radius = 6
+    self.radius = 5
 
   def update(self, dt):
     self.x += math.cos(self.angle) * self.speed * dt
@@ -56,7 +56,7 @@ class HomingBullet(Bullet):
   def update(self, dt):
     if self.target:
       dx = self.target.x - self.x
-      dy = self.target.y = self.y
+      dy = self.target.y - self.y
       target_angle = math.atan2(dy, dx)
       diff = (target_angle - self.angle + math.pi) % (2 * math.pi) - math.pi
       self.angle += max(-self.turn_speed*dt, min(self.turn_speed*dt, diff))
@@ -92,7 +92,7 @@ class LaserBullet(GameObject):
         start_x = self.x + math.cos(self.angle) * i
         start_y = self.y + math.sin(self.angle) * i
         segment_end_x = self.x + math.cos(self.angle) * (i + 10)
-        segment_end_y = self.y + math.cos(self.angle) * (i + 10)
+        segment_end_y = self.y + math.sin(self.angle) * (i + 10)
         pygame.draw.line(screen, color, (start_x, start_y), (segment_end_x, segment_end_y), width)
     else:
       color = NEON_PURPLE
@@ -122,7 +122,7 @@ class LaserBullet(GameObject):
 
     # 선분-점 최단거리
     dx = end_x - self.x
-    dy = end_y = self.y
+    dy = end_y - self.y
 
     if dx == 0 and dy == 0:
       distance = math.sqrt((px - self.x)**2 + (py - self.y)**2)

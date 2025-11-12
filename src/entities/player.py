@@ -7,9 +7,9 @@ class Player(GameObject):
   def __init__(self, x, y, image, bullet_image):
     super().__init__(x, y)
     self.image = image
-    self.radius = 3           # 층돌 처리용 반지름
+    self.radius = 5           # 층돌 처리용 반지름
     self.hp = PLAYER_MAX_HP
-    self.bombs = PLAYER_BOMB_COUNT
+    self.items = PLAYER_ITEM_COUNT
     self.shoot_cooldown = 0   # 연속 발사 제한용 타이머
     self.invincible = False   # 무적 상태 여부
     self.invincible_timer = 0
@@ -59,9 +59,9 @@ class Player(GameObject):
       return bullets
     return []
 
-  def use_bomb(self):
-    if self.bombs > 0:
-      self.bombs -= 1
+  def use_item(self):
+    if self.items > 0:
+      self.items -= 1
       self.invincible = True
       self.invincible_timer = 1.0
       return True
@@ -81,7 +81,7 @@ class Player(GameObject):
       return
 
     for i in range(3, 0, -1):
-      glow_size = 20 + i * 8
+      glow_size = 20 + i * 2
       glow_surf = pygame.Surface((glow_size * 2, glow_size * 2), pygame.SRCALPHA)
       pygame.draw.circle(glow_surf, (*NEON_CYAN, 30 * i), (glow_size, glow_size), glow_size)
       screen.blit(glow_surf, (int(self.x - glow_size), int(self.y - glow_size)))

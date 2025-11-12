@@ -4,16 +4,22 @@ from src.systems.bullet_pattern import BulletPattern
 from src.utils.constants import *
 
 class Boss(GameObject):
-  def __init__(self, x, y, image, bullet_image, difficulty=1):
+  def __init__(self, x, y, image, bullet_image, stage=1):
     super().__init__(x, y)
     self.image = image
     self.bullet_image = bullet_image
-    self.radius = 60
-    self.max_hp = DIFFICULTY_LEVELS[difficulty]["boss_hp"]
+    self.stage = stage
+    self.radius = 25
+
+    # 스테이지에 따른 능력치
+    config = DIFFICULTY_LEVELS.get(stage, DIFFICULTY_LEVELS[1])
+    self.max_hp = config["boss_hp"]
     self.hp = self.max_hp
-    self.phase = 1                          # 공격 페이즈
+    self.phase = 1          # 공격 페이즈
+    self.attack_cooldown = config["cooldown"]
+    self.attack_speed = config["attack_speed"]
+    
     self.attack_timer = 0
-    self.attack_cooldown = DIFFICULTY_LEVELS[difficulty]["cooldown"]
     self.pattern_index = 0
     self.target_x = x
     self.target_y = y
@@ -47,10 +53,22 @@ class Boss(GameObject):
     if self.hit_flash > 0:
       self.hit_flash -= dt * 5
 
+  # 새 페이즈 진입
+  def enter_phase(self, new_phase):
+    self.phase = new_phase
+    self.attack_cooldown *= 0.8
+    return True
+
+
   def take_damage(self, damage):
     self.hp -= damage
     self.hit_flash = 1.0
-    return self.hp <= 0
+
+    if self.hp <= 0:
+      self.hp = 0
+      self.active = False
+      return True
+    return False
 
   def try_attack(self, player):
     if self.attack_timer >= self.attack_cooldown:
@@ -128,7 +146,7 @@ class Boss(GameObject):
 
     # HP(그라데이션)
     hp_ratio = max(0, self.hp / self.max_hp)
-    current_width = int(bar_width)
+    current_width = int(bar_width * hp_ratio)
     
     if hp_ratio > 0.5:
       color = NEON_CYAN
@@ -147,6 +165,12 @@ class Boss(GameObject):
     font = pygame.font.Font(None, 18)
     hp_text = font.render(f"{int(self.hp)}/{int(self.max_hp)}", True, WHITE)
     screen.blit(hp_text, (self.x - hp_text.get_width()//2, bar_y + 15))
+
+    # 페이지 표시
+    if self.phase > 1:
+      phase_font = pygame.font.Font(None, 24)
+      phase_text = phase_font.render(f"PHASE {self.phase}", True, NEON_YELLOW)
+      screen.blit(phase_text, (self.x - 40, self.y - 100))
 
 
   
