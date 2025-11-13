@@ -32,9 +32,6 @@ python과 pygame을 활용한 OOP 기반 탄막 슈팅 게임입니다.
 * **Laser Pattern**: 십자/X자 레이저 (스테이지 3+)
 * **Random Spray Pattern**: 무작위 분사
 
-#### Laser & Circle Pattern 예시
-![laser](./assets/screenshots/laser_img.png)
-
 ### 플레이어 시스템
 * **HP**: 3칸(피격 시 2초 무적)
 * **파워 레벨**: 1 ~ 3단계(공격력 증가)
@@ -45,6 +42,9 @@ python과 pygame을 활용한 OOP 기반 탄막 슈팅 게임입니다.
 * **Power(P)**: 공격력 증가
 * **Item(I)**: 폭탄 획득
 * **HP(HP)**: 체력 회복
+
+#### Laser & Circle Pattern 예시
+![laser](./assets/screenshots/laser_img.png)
 
 ## 🕹️ 설치 방법
 ### 저장소 클론
