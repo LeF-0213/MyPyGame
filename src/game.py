@@ -312,6 +312,7 @@ class Game:
     pygame.display.flip()
 
   def handle_events(self):
+    action = None
     for event in pygame.event.get():
       if event.type == pygame.QUIT:
         self.running = False
@@ -320,8 +321,8 @@ class Game:
           self.running = False
         elif event.key == pygame.K_r and self.game_over:
           self.running = False
-          Game(self.difficulty, 1).run()
-          return
+          # Game(self.difficulty, 1).run()
+          return "restart"
         elif event.key == pygame.K_SPACE:
           if self.stage_clear:
             self.next_stage()
@@ -333,11 +334,66 @@ class Game:
             self.enemy_bullets.clear()
             self.particles.emit(self.player.x, self.player.y, "explosion", 50)
 
+      return action
+
   def run(self):
     while self.running:
       dt = self.clock.tick(FPS) / 1000.0
-      self.handle_events()
+      action = self.handle_events()
+
+      if action == "restart":
+        return "restart"
+
       self.update(dt)
       self.draw()
 
+    return None
+
+  def run_game_with_title(self):
+    pygame.init()
+
+    running = True
+    while running:
+      screen = pygame.display.set_mode((WIDTH, HEIGHT))
+      pygame.display.set_caption("🎮 고전 슈팅 게임 - Title")
+      clock = pygame.time.Clock()
+
+      title = TitleScreen(screen)
+      title_running = True
+      selected_stage = 1
+
+      while title_running and title.active:
+        dt = clock.tick(FPS) / 1000.0
+
+        for event in pygame.event.get():
+          if event.type == pygame.QUIT:
+            running = False
+            title_running = False
+
+          action, stage = title.handle_events(event)
+          if action == "start":
+            selected_stage = stage
+            title_running = False
+          elif action == "quit":
+            running = False
+            title_running = False
+
+        title.update(dt)
+        title.draw()
+        pygame.display.flip()
+
+      if not running:
+        break
+
+      print(f"\n🎮 Starting Stage {selected_stage}...")
+      print(f"Difficulty: {DIFFICULTY_LEVELS[selected_stage]['name']}\n")
+      
+      game = Game(difficulty=1, start_stage=selected_stage)
+      result = game.run()
+      
+      # 재시작하지 않으면 타이틀로
+      if result != "restart":
+        print("\n🎮 Returning to title screen...")
+
     pygame.quit()
+
