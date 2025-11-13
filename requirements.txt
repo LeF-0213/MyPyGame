@@ -1,0 +1,5 @@
+# Pygame - 게임 엔진
+pygame>=2.5.0
+
+# Pillow - 이미지 생성 및 처리 (tools/generate_images.py용)
+pillow>=10.0.0
