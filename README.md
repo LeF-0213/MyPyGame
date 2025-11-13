@@ -26,12 +26,12 @@ python과 pygame을 활용한 OOP 기반 탄막 슈팅 게임입니다.
 
 ### 탄막 패턴
 
-Circle Pattern: 원형 방사 탄막
-Spiral Pattern: 나선형 회전 탄막
-Aimed Burst: 플레이어 겨냥 부채꼴
-Homing Missile: 추적 탄막
-Laser: 십자/X자 레이저 (스테이지 3+)
-Random Spray: 무작위 분사
+* **Circle Pattern**: 원형 방사 탄막
+* **Spiral Pattern**: 나선형 회전 탄막
+* **Aimed Burst**: 플레이어 겨냥 부채꼴
+* **Homing Missile**: 추적 탄막
+* **Laser**: 십자/X자 레이저 (스테이지 3+)
+* **Random Spray**: 무작위 분사
 
 ### 플레이어 시스템
 * **HP**: 3칸(피격 시 2초 무적)
@@ -40,9 +40,9 @@ Random Spray: 무작위 분사
 * **슬로우 모두**: Shift키 클릭시 정밀 조작
 
 ### 파워업 시스템
-Power(P): 공격력 증가
-Item(I): 폭탄 획득
-HP(HP): 체력 회복
+* **Power(P)**: 공격력 증가
+* **Item(I)**: 폭탄 획득
+* **HP(HP)**: 체력 회복
 
 <br>
 
