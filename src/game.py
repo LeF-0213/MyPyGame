@@ -25,7 +25,10 @@ class Game:
     # 이미지 로드
     try:
       self.player_img = pygame.image.load('assets/images/player.png').convert_alpha()
-      self.boss_img = pygame.image.load('assets/images/boss.png').convert_alpha()
+      self.boss1_img = pygame.image.load('assets/images/boss.png').convert_alpha()
+      self.boss2_img = pygame.image.load('assets/images/boss_stage2.png').convert_alpha()
+      self.boss3_img = pygame.image.load('assets/images/boss_stage3.png').convert_alpha()
+      self.boss4_img = pygame.image.load('assets/images/boss_stage4.png').convert_alpha()
       self.bullet_img = pygame.image.load('assets/images/bullet_cyan.png').convert_alpha()
       self.boss_bullet_img = pygame.image.load('assets/images/bullet.png').convert_alpha()
       self.enemy_bullet_img = pygame.image.load('assets/images/bullet_normal.png').convert_alpha()
@@ -67,12 +70,15 @@ class Game:
     boss_count = config["boss_count"]
 
     if boss_count == 1:
-      boss = Boss(WIDTH // 2, 150, self.boss_img, self.boss_bullet_img, stage)
+      if stage == 1:
+        boss = Boss(WIDTH // 2, 150, self.boss1_img, self.boss_bullet_img, stage)
+      else:
+        boss = Boss(WIDTH // 2, 150, self.boss2_img, self.boss_bullet_img, stage)
       self.bosses.append(boss)
 
     elif boss_count == 2:
-      boss1 = Boss(WIDTH // 3, 150, self.boss_img, self.boss_bullet_img, stage)
-      boss2 = Boss(WIDTH * 2 // 3, 150, self.boss_img, self.boss_bullet_img, stage)
+      boss1 = Boss(WIDTH // 3, 150, self.boss3_img, self.boss_bullet_img, stage)
+      boss2 = Boss(WIDTH * 2 // 3, 150, self.boss4_img, self.boss_bullet_img, stage)
 
       # 서로 다른 패턴 타이밍 (교차 공격)
       boss2.attack_timer = config["cooldown"] / 2 # 절반씩 차이
@@ -81,9 +87,9 @@ class Game:
       self.bosses.append(boss2)
 
     elif boss_count == 3:
-      boss1 = Boss(WIDTH // 4, 150, self.boss_img, self.boss_bullet_img, stage)
-      boss2 = Boss(WIDTH * 2 // 4, 150, self.boss_img, self.boss_bullet_img, stage)
-      boss3 = Boss(WIDTH * 3 // 4, 150, self.boss_img, self.boss_bullet_img, stage)
+      boss1 = Boss(WIDTH // 4, 150, self.boss2_img, self.boss_bullet_img, stage)
+      boss2 = Boss(WIDTH * 2 // 4, 150, self.boss4_img, self.boss_bullet_img, stage)
+      boss3 = Boss(WIDTH * 3 // 4, 150, self.boss3_img, self.boss_bullet_img, stage)
 
       boss2.attack_timer = config["cooldown"] * 2 / 3
       boss3.attack_timer = config["cooldown"] * 3 / 4

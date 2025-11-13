@@ -481,10 +481,365 @@ def create_dragon_boss(size=150):
   
   return img
 
+def create_dragon_king(size=200):
+    """🐉 드래곤 킹 - Stage 1 (네온 사이버 드래곤)"""
+    img = Image.new('RGBA', (size, size), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+    cx, cy = size // 2, size // 2
+    
+    # === 몸통 (중앙 큰 다이아몬드) ===
+    body_size = 50
+    body = [
+        (cx, cy - body_size),           # 머리 (위)
+        (cx + body_size, cy),           # 오른쪽
+        (cx, cy + body_size + 20),      # 꼬리 (아래)
+        (cx - body_size, cy),           # 왼쪽
+    ]
+    
+    # 그림자
+    shadow_body = [(x+3, y+3) for x, y in body]
+    draw.polygon(shadow_body, fill=(80, 0, 120, 150))
+    
+    # 메인 몸통
+    draw.polygon(body, fill=(180, 0, 255, 255))  # 보라
+    draw.polygon(body, outline=(255, 50, 255, 255), width=4)
+    
+    # === 날개 (뒤쪽) ===
+    # 왼쪽 날개
+    left_wing = [
+        (cx - 10, cy - 10),
+        (cx - 70, cy - 35),
+        (cx - 85, cy - 5),
+        (cx - 70, cy + 20),
+        (cx - 30, cy + 5),
+    ]
+    draw.polygon(left_wing, fill=(150, 0, 200, 220))
+    draw.polygon(left_wing, outline=(255, 0, 255, 255), width=3)
+    
+    # 오른쪽 날개
+    right_wing = [
+        (cx + 10, cy - 10),
+        (cx + 70, cy - 35),
+        (cx + 85, cy - 5),
+        (cx + 70, cy + 20),
+        (cx + 30, cy + 5),
+    ]
+    draw.polygon(right_wing, fill=(150, 0, 200, 220))
+    draw.polygon(right_wing, outline=(255, 0, 255, 255), width=3)
+    
+    # === 머리 디테일 ===
+    # 뿔 (왼쪽)
+    horn_left = [
+        (cx - 15, cy - body_size),
+        (cx - 25, cy - body_size - 25),
+        (cx - 18, cy - body_size - 22)
+    ]
+    draw.polygon(horn_left, fill=(255, 0, 200, 255))
+    
+    # 뿔 (오른쪽)
+    horn_right = [
+        (cx + 15, cy - body_size),
+        (cx + 25, cy - body_size - 25),
+        (cx + 18, cy - body_size - 22)
+    ]
+    draw.polygon(horn_right, fill=(255, 0, 200, 255))
+    
+    # 눈 (빛나는 효과)
+    for eye_x in [cx - 18, cx + 18]:
+        for r in range(8, 3, -1):
+            draw.ellipse([eye_x - r, cy - body_size + 15 - r,eye_x + r, cy - body_size + 15 + r], fill=(0, 255, 255, 255 // (9 - r)))
+        draw.ellipse([eye_x - 4, cy - body_size + 11, eye_x + 4, cy - body_size + 19], fill=(0, 255, 255, 255))
+    
+    # === 에너지 코어 (가슴) ===
+    for r in range(15, 8, -1):
+        alpha = 200 - (15 - r) * 20
+        draw.ellipse([cx - r, cy - r, cx + r, cy + r], fill=(0, 255, 200, alpha))
+    draw.ellipse([cx - 8, cy - 8, cx + 8, cy + 8], fill=(0, 255, 255, 255))
+    
+    # === 몸통 라인 ===
+    draw.line([(cx, cy - body_size + 10), (cx, cy + body_size)], fill=(255, 100, 255, 255), width=3)
+    
+    return img
+
+
+def create_cyber_beast(size=200):
+    """👾 사이버 비스트 - Stage 2 (메카닉 몬스터)"""
+    img = Image.new('RGBA', (size, size), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+    cx, cy = size // 2, size // 2
+    
+    # === 메인 바디 (육각형) ===
+    angles = 6
+    radius = 55
+    body_points = []
+    for i in range(angles):
+        angle = (i / angles) * 2 * math.pi - math.pi / 2
+        x = cx + radius * math.cos(angle)
+        y = cy + radius * math.sin(angle)
+        body_points.append((x, y))
+    
+    # 그림자
+    shadow_points = [(x+3, y+3) for x, y in body_points]
+    draw.polygon(shadow_points, fill=(0, 80, 120, 150))
+    
+    # 메인 바디
+    draw.polygon(body_points, fill=(0, 150, 255, 255))  # 시안
+    draw.polygon(body_points, outline=(0, 255, 255, 255), width=4)
+    
+    # === 기계 팔 (4개) ===
+    arm_positions = [
+        (-60, -20, -80, -35),  # 왼쪽 위
+        (-60, 20, -80, 35),    # 왼쪽 아래
+        (60, -20, 80, -35),    # 오른쪽 위
+        (60, 20, 80, 35),      # 오른쪽 아래
+    ]
+    
+    for x1, y1, x2, y2 in arm_positions:
+        # 팔
+        draw.line([(cx + x1, cy + y1), (cx + x2, cy + y2)],fill=(0, 200, 255, 255), width=8)
+        # 관절
+        draw.ellipse([cx + x1 - 6, cy + y1 - 6, cx + x1 + 6, cy + y1 + 6], fill=(255, 0, 200, 255))
+        # 끝 부분 (무기)
+        draw.ellipse([cx + x2 - 8, cy + y2 - 8, cx + x2 + 8, cy + y2 + 8], fill=(255, 255, 0, 255))
+    
+    # === 코어 (중앙 육각형) ===
+    core_radius = 25
+    core_points = []
+    for i in range(6):
+        angle = (i / 6) * 2 * math.pi
+        x = cx + core_radius * math.cos(angle)
+        y = cy + core_radius * math.sin(angle)
+        core_points.append((x, y))
+    
+    draw.polygon(core_points, fill=(255, 0, 200, 255))
+    draw.polygon(core_points, outline=(255, 255, 255, 255), width=2)
+    
+    # === 눈 (3개) ===
+    for eye_y in [cy - 15, cy, cy + 15]:
+        for r in range(6, 2, -1):
+            draw.ellipse([cx - r, eye_y - r, cx + r, eye_y + r],
+                        fill=(255, 255, 0, 200 - r * 20))
+        draw.ellipse([cx - 3, eye_y - 3, cx + 3, eye_y + 3],
+                    fill=(255, 255, 255, 255))
+    
+    # === 기계 디테일 (선) ===
+    for i in range(6):
+        angle = (i / 6) * 2 * math.pi
+        x1 = cx + 25 * math.cos(angle)
+        y1 = cy + 25 * math.sin(angle)
+        x2 = cx + 55 * math.cos(angle)
+        y2 = cy + 55 * math.sin(angle)
+        draw.line([(x1, y1), (x2, y2)], fill=(0, 255, 255, 255), width=2)
+    
+    return img
+
+
+def create_thunder_lord(size=200):
+    """⚡ 썬더 로드 - Stage 3 (전기 드래곤)"""
+    img = Image.new('RGBA', (size, size), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+    cx, cy = size // 2, size // 2
+    
+    # === 뱀 같은 몸통 (S자 곡선) ===
+    segments = 8
+    for i in range(segments):
+        t = i / segments
+        # S자 곡선
+        x = cx + 30 * math.sin(t * math.pi * 2)
+        y = cy - 60 + t * 120
+        radius = 25 - t * 8
+        
+        # 세그먼트
+        draw.ellipse([x - radius, y - radius, x + radius, y + radius],
+                    fill=(255, 255, 0, 255))
+        draw.ellipse([x - radius, y - radius, x + radius, y + radius],
+                    outline=(255, 255, 255, 255), width=2)
+        
+        # 전기 스파크
+        if i % 2 == 0:
+            spark_points = [
+                (x - radius, y),
+                (x - radius - 15, y - 10),
+                (x - radius - 5, y),
+                (x - radius - 20, y + 10),
+                (x - radius, y)
+            ]
+            draw.polygon(spark_points, fill=(255, 255, 100, 255))
+    
+    # === 머리 (꼭대기) ===
+    head_size = 40
+    head = [
+        (cx, cy - 80),                    # 뾰족한 머리
+        (cx + 25, cy - 60),
+        (cx + 20, cy - 40),
+        (cx - 20, cy - 40),
+        (cx - 25, cy - 60),
+    ]
+    
+    # 그림자
+    shadow_head = [(x+2, y+2) for x, y in head]
+    draw.polygon(shadow_head, fill=(100, 100, 0, 150))
+    
+    # 메인 머리
+    draw.polygon(head, fill=(255, 255, 0, 255))
+    draw.polygon(head, outline=(255, 255, 255, 255), width=3)
+    
+    # === 뿔 (전기 안테나) ===
+    for horn_x in [cx - 20, cx + 20]:
+        # 뿔
+        horn = [
+            (horn_x, cy - 70),
+            (horn_x - 5, cy - 95),
+            (horn_x + 5, cy - 95),
+        ]
+        draw.polygon(horn, fill=(255, 200, 0, 255))
+        
+        # 전기 효과
+        for i in range(5):
+            offset = i * 5
+            draw.line([(horn_x, cy - 70 - offset), 
+                      (horn_x + (-1)**i * 8, cy - 75 - offset)],
+                     fill=(255, 255, 200, 255), width=2)
+    
+    # === 눈 (번개 모양) ===
+    for eye_x in [cx - 12, cx + 12]:
+        # 번개 눈
+        lightning = [
+            (eye_x, cy - 60),
+            (eye_x + 3, cy - 55),
+            (eye_x - 1, cy - 55),
+            (eye_x + 2, cy - 50),
+            (eye_x - 2, cy - 50),
+            (eye_x, cy - 45),
+        ]
+        draw.polygon(lightning, fill=(255, 255, 255, 255))
+        
+        # 글로우
+        for r in range(8, 3, -1):
+            draw.ellipse([eye_x - r, cy - 52 - r, eye_x + r, cy - 52 + r],
+                        fill=(255, 255, 0, 150 - r * 10))
+    
+    # === 에너지 코어 (가슴) ===
+    for r in range(18, 10, -1):
+        alpha = 200 - (18 - r) * 15
+        draw.ellipse([cx - r, cy - 50 - r, cx + r, cy - 50 + r],
+                    fill=(255, 255, 100, alpha))
+    draw.ellipse([cx - 10, cy - 60, cx + 10, cy - 40],
+                fill=(255, 255, 255, 255))
+    
+    return img
+
+
+def create_twin_demons(size=200):
+    """💀 트윈 데몬즈 - Stage 4 (쌍둥이 악마)"""
+    img = Image.new('RGBA', (size, size), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+    cx, cy = size // 2, size // 2
+    
+    # === 쌍둥이 구조 (좌우 대칭) ===
+    offset = 35
+    
+    for side in [-1, 1]:  # -1: 왼쪽, 1: 오른쪽
+        base_x = cx + side * offset
+        
+        # === 몸통 (역삼각형) ===
+        body = [
+            (base_x, cy - 45),                    # 머리
+            (base_x - 25, cy + 30),               # 왼쪽 아래
+            (base_x + 25, cy + 30),               # 오른쪽 아래
+        ]
+        
+        # 그림자
+        shadow = [(x+2, y+2) for x, y in body]
+        draw.polygon(shadow, fill=(80, 0, 0, 150))
+        
+        # 메인 몸통 (좌우 색 다르게)
+        if side == -1:
+            body_color = (255, 0, 100, 255)   # 왼쪽: 핑크
+            outline_color = (255, 100, 150, 255)
+        else:
+            body_color = (200, 0, 255, 255)   # 오른쪽: 보라
+            outline_color = (255, 100, 255, 255)
+        
+        draw.polygon(body, fill=body_color)
+        draw.polygon(body, outline=outline_color, width=3)
+        
+        # === 날개 (박쥐 날개) ===
+        wing = [
+            (base_x, cy - 10),
+            (base_x - side * 40, cy - 30),
+            (base_x - side * 50, cy - 10),
+            (base_x - side * 45, cy + 5),
+            (base_x - side * 20, cy + 5),
+        ]
+        draw.polygon(wing, fill=body_color)
+        draw.polygon(wing, outline=outline_color, width=2)
+        
+        # === 뿔 (악마 뿔) ===
+        for horn_side in [-1, 1]:
+            horn_x = base_x + horn_side * 15
+            horn = [
+                (horn_x, cy - 45),
+                (horn_x + horn_side * 5, cy - 60),
+                (horn_x + horn_side * 12, cy - 58),
+                (horn_x + horn_side * 8, cy - 45),
+            ]
+            draw.polygon(horn, fill=(50, 0, 50, 255))
+            draw.line([(horn_x, cy - 45), (horn_x + horn_side * 10, cy - 59)], fill=(255, 0, 0, 255), width=2)
+        
+        # === 눈 (빛나는 빨간 눈) ===
+        eye_x = base_x
+        eye_y = cy - 30
+        
+        for r in range(10, 4, -1):
+            alpha = 200 - (10 - r) * 20
+            draw.ellipse([eye_x - r, eye_y - r, eye_x + r, eye_y + r],
+                        fill=(255, 0, 0, alpha))
+        draw.ellipse([eye_x - 5, eye_y - 5, eye_x + 5, eye_y + 5],
+                    fill=(255, 50, 50, 255))
+        draw.ellipse([eye_x - 2, eye_y - 2, eye_x + 2, eye_y + 2],
+                    fill=(255, 255, 255, 255))
+        
+        # === 이빨 ===
+        teeth_y = cy + 30
+        for tooth_x in range(-15, 20, 10):
+            tooth = [
+                (base_x + tooth_x, teeth_y),
+                (base_x + tooth_x - 3, teeth_y + 8),
+                (base_x + tooth_x + 3, teeth_y + 8),
+            ]
+            draw.polygon(tooth, fill=(255, 255, 255, 255))
+    
+    # === 중앙 연결 (에너지) ===
+    for i in range(5):
+        y_pos = cy - 20 + i * 10
+        draw.line([(cx - offset, y_pos), (cx + offset, y_pos)],
+                 fill=(255, 0, 200, 150 - i * 20), width=3)
+    
+    # 중앙 코어
+    for r in range(12, 6, -1):
+        alpha = 200 - (12 - r) * 20
+        draw.ellipse([cx - r, cy - r, cx + r, cy + r],
+                    fill=(255, 0, 150, alpha))
+    draw.ellipse([cx - 6, cy - 6, cx + 6, cy + 6],
+                fill=(255, 255, 255, 255))
+    
+    return img
+
 # ===================== 실행 =====================
 
 if __name__ == "__main__":
   print("게임 에셋 생성 start")
+  dragon = create_dragon_king(200)
+  dragon.save('assets/images/boss_stage1.png')
+  # cyber = create_cyber_beast(150)
+  # cyber.save('assets/images/boss_stage2.png')
+  thunder = create_thunder_lord(200)
+  thunder.save('assets/images/boss_stage3.png')
+  demons = create_twin_demons(150)
+  demons.save('assets/images/boss_stage4.png')
+
+
   # bullet = create_normal_bullet(16)
   # bullet.save('bullet_normal.png')
 
