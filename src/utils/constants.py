@@ -41,7 +41,7 @@ DIFFICULTY_LEVELS = {
   1: {"name": "EASY", "boss_hp": 200, "attack_speed": 3.0, "cooldown": 2.5, "boss_count": 1},
   2: {"name": "NORMAL", "boss_hp": 250, "attack_speed": 2.5, "cooldown": 2, "boss_count": 1},
   3: {"name": "HARD", "boss_hp": 250, "attack_speed": 2.0, "cooldown": 1, "boss_count": 2},
-  4: {"name": "INSANE", "boss_hp": 350, "attack_speed": 1.5, "cooldown": 1, "boss_count": 2}
+  4: {"name": "INSANE", "boss_hp": 350, "attack_speed": 1.5, "cooldown": 1, "boss_count": 3}
 }
 
 # 점수

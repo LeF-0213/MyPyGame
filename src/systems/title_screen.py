@@ -108,8 +108,67 @@ class TitleScreen:
       text = font.render(line, True, color)
       self.screen.blit(text, (WIDTH//2 - text.get_width()//2, y_offset + i * 22))
 
-    # === 난이도 선택 ===
+    # === 스테이지 선택 ===
     stage_y = HEIGHT - 150
 
     stage_title = self.menu_font.render("SELECT STAGE", True, NEON_YELLOW)
+    self.screen.blit(stage_title, (WIDTH//2 - stage_title.get_width()//2, stage_y))
 
+    # 스테이지 버튼
+    button_y = stage_y + 50
+    button_width = 120
+    button_spacing = 140
+    start_x = WIDTH//2 - (4 * button_spacing - button_spacing + button_width) // 2
+
+    for stage in range(1, 5):
+      button_x = start_x + (stage - 1) * button_spacing
+
+      # 선택된 스테이지 강조
+      if stage == self.selected_stage:
+        color = NEON_CYAN
+        ouline_width = 4
+        pulse_size = int(5 + math.sin(self.pulse * 2) * 3)
+
+        # 펄스 효과
+        glow_rect = pygame.Rect(button_x - pulse_size, button_y - pulse_size, button_width + pulse_size*2, 40 + pulse_size*2)
+        glow_surf = pygame.Surface((glow_rect.width, glow_rect.height), pygame.SRCALPHA)
+        pygame.draw.rect(glow_surf, (*NEON_CYAN, 100), (0, 0, glow_rect.width, glow_rect.height), border_radius=10)
+        self.screen.blit(glow_surf, glow_rect)
+      else:
+        color = NEON_PURPLE
+        ouline_width = 2
+
+      # 버튼
+      button_rect = pygame.Rect(button_x, button_y, button_width, 40)
+      pygame.draw.rect(self.screen, (30, 30, 50), button_rect, border_radius=8)
+      pygame.draw.rect(self.screen, color, button_rect, outline_width, border_radius=8)
+
+      # 텍스트
+      stage_text = self.menu_font.render(f"Stage {stage}", True, color)
+      diff_text = self.small_font.render(
+        DIFFICULTY_LEVELS[stage]["name"], True, color
+      )
+
+      self.screen.blit(stage_text, (button_x + button_width//2 - stage_text.get_width()//2, button_y + 5))
+      self.screen.blit(diff_text, (button_x + button_width//2 - diff_text.get_width()//2, button_y + 30))
+  
+  # === 시작 안내 (깜빡임) ===
+  if int(self.pulse * 2) % 2 == 0:
+    start_text = self.subtitle_font.render("PRESS SPACE TO START", True, NEON_YELLOW)
+
+    self.screen.blit(start_text, (WIDTH//2 - start_text.get_width()//2, HEIGHT - 60))
+
+  # 마우스 클릭 안내
+  mouse_text = self.small_font.render("or click stage button", True, (150, 150, 150))
+
+  self.screen.blit(mouse_text, (WIDTH//2 - mouse_text.get_width()//2, HEIGHT - 30))
+
+def handle_events(self, event):
+  if event.type == pygame.KEYDOWN:
+    if event.key == pygame.K_SPACE:
+      self.active = False
+      return("start", self.selected_stage)
+
+    elif event.key == pygame.K_LEFT:
+      self.selected_stage = max()
+    
