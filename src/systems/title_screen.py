@@ -6,6 +6,7 @@ class TitleScreen:
     self.screen = screen
     self.active = True
     self.selected_stage = 1
+    self.selected_player = 0
 
     # 폰트
     self.title_font = pygame.font.Font(None, 96)
@@ -24,6 +25,14 @@ class TitleScreen:
       speed = random.uniform(10, 50)
       size = random.randint(1, 3)
       self.star_positions.append([x, y, speed, size])
+
+    # 플레이어 이미지 로드
+    self.player_images = []
+    self.player_names = ["Black_Dragon", "White_Dragon"]
+
+    for i in range(1, 3):
+      img = pygame.image.load(f'assets/images/player{i}.png').convert_alpha()
+      self.player_images.append(img)   
 
   def update(self, dt):
     self.pulse += dt * 2
@@ -63,6 +72,53 @@ class TitleScreen:
     self.screen.blit(title_text, (WIDTH//2 - title_text.get_width()//2, 30))
     self.screen.blit(subtitle_text, (WIDTH//2 - subtitle_text.get_width()//2, 90))
 
+    # === 플레이어 선택 ===
+    player_y = 350
+
+    player_title = self.menu_font.render("SELECT PLAYER", True, NEON_YELLOW)
+    self.screen.blit(player_title, (WIDTH//2 - player_title.get_width()//2, player_y))
+
+    # 플레이어 아이콘 표시
+    icon_y = player_y + 50
+    icon_size = 50
+    icon_spacing = 150
+    start_x = WIDTH//2 - (len(self.player_images) * icon_spacing - icon_spacing + icon_size) // 2
+
+    for i, img in enumerate(self.player_images):
+      icon_x = start_x + i * icon_spacing
+
+      # 선택된 플레이어 강조
+      if i == self.selected_player:
+        if i == 0:
+          color = NEON_CYAN
+        else:
+          color = NEON_PINK
+        outline_width = 4
+        pulse_size = int(5 + math.sin(self.pulse * 2) * 3)
+
+        # 펄스 효과
+        glow_rect = pygame.Rect(icon_x - pulse_size, icon_y - pulse_size, icon_size + pulse_size*2, icon_size + pulse_size*2)
+        glow_surf = pygame.Surface((glow_rect.width, glow_rect.height), pygame.SRCALPHA)
+        pygame.draw.rect(glow_surf, (*color, 100), (0, 0, glow_rect.width, glow_rect.height), border_radius=10)
+        self.screen.blit(glow_surf, glow_rect)
+      else:
+        color = NEON_PURPLE
+        outline_width = 2
+      
+      # 아이콘 배경
+      icon_rect = pygame.Rect(icon_x, icon_y, icon_size, icon_size)
+      pygame.draw.rect(self.screen, (30, 30, 50), icon_rect, border_radius=8)
+      pygame.draw.rect(self.screen, color, icon_rect, outline_width, border_radius=8)
+
+      # 플레이어 이미지
+      scaled_img = pygame.transform.scale(img, (icon_size - 10, icon_size - 10))
+      img_rect = scaled_img.get_rect(center=icon_rect.center)
+      self.screen.blit(scaled_img, img_rect)
+
+      # 플레이어 이름
+      name_text = self.small_font.render(self.player_names[i], True, color)
+      self.screen.blit(name_text, (icon_x + icon_size//2 - name_text.get_width()//2, icon_y + icon_size + 5))
+
     # === 게임 설명 ===
     y_offset = 140
 
@@ -73,20 +129,16 @@ class TitleScreen:
       "  Space -------- Shoot          ",
       "  Shift -------- Slow Mode      ",
       "  X -------- Use Item (Bomb)  ",
-      "",
       "GAME INFO",
       "========================================",
-      "  • 4 Stages with increasing difficulty   ",
-      "  • Boss HP bar & 3 Phase system          ",
-      "  • Power-ups: [P] Power  [I] Item  [+] HP",
-      "  • Stage 4: Twin Boss Battle!            ",
+      "Power-ups: [P] Power  [I] Item  [+] HP",
     ]
 
     for i, line in enumerate(instructions):
       if line.startswith("C") or line.startswith("G"):
         color = NEON_YELLOW
         font = self.menu_font
-      elif line.startswith("  •"):
+      elif line.startswith("P"):
         color = NEON_CYAN
         font = self.small_font
       elif line.startswith("  "):
@@ -103,7 +155,7 @@ class TitleScreen:
       self.screen.blit(text, (WIDTH//2 - text.get_width()//2, y_offset + i * 22))
 
     # === 스테이지 선택 ===
-    stage_y = HEIGHT - 150
+    stage_y = HEIGHT - 300
 
     stage_title = self.menu_font.render("SELECT STAGE", True, NEON_YELLOW)
     self.screen.blit(stage_title, (WIDTH//2 - stage_title.get_width()//2, stage_y))
@@ -146,34 +198,67 @@ class TitleScreen:
 
       self.screen.blit(stage_text, (button_x + button_width//2 - stage_text.get_width()//2, button_y + 5))
       self.screen.blit(diff_text, (button_x + button_width//2 - diff_text.get_width()//2, button_y + 30))
+
+      # === 조작법 안내 ===
+      controls_y = button_y + 80
+      controls = [
+        "Controls: Up Down (Player)  | Left Right (Stage) | Space (Start) | ESC (Quit)"
+      ]
+
+      for i, line in enumerate(controls):
+        text = self.small_font.render(line, True, NEON_GREEN)
+        self.screen.blit(text, (WIDTH//2 - text.get_width()//2, controls_y + i * 25))
+
   
       # === 시작 안내 (깜빡임) ===
       if int(self.pulse * 2) % 2 == 0:
         start_text = self.subtitle_font.render("PRESS SPACE TO START", True, NEON_YELLOW)
 
-        self.screen.blit(start_text, (WIDTH//2 - start_text.get_width()//2, HEIGHT - 60))
+        self.screen.blit(start_text, (WIDTH//2 - start_text.get_width()//2, HEIGHT - 150))
 
       # 마우스 클릭 안내
-      mouse_text = self.small_font.render("or click stage button", True, (150, 150, 150))
+      mouse_text = self.small_font.render("or click stage button", True, NEON_GREEN)
 
-      self.screen.blit(mouse_text, (WIDTH//2 - mouse_text.get_width()//2, HEIGHT - 30))
+      self.screen.blit(mouse_text, (WIDTH//2 - mouse_text.get_width()//2, HEIGHT - 100))
 
   def handle_events(self, event):
     if event.type == pygame.KEYDOWN:
       if event.key == pygame.K_SPACE:
         self.active = False
-        return("start", self.selected_stage)
+        return("start", self.selected_stage, self.selected_player)
       elif event.key == pygame.K_LEFT:
         self.selected_stage = max(1, self.selected_stage - 1)
       elif event.key == pygame.K_RIGHT:
         self.selected_stage = min(4, self.selected_stage + 1)
+      elif event.key == pygame.K_UP:
+        self.selected_player = min(1, self.selected_player - 1)
+      elif event.key == pygame.K_DOWN:
+        self.selected_player = min(2, self.selected_player + 1)
       elif event.key == pygame.K_ESCAPE:
-        return ("quit", None)
+        return ("quit", None, None)
 
     # 마우스 클릭
     elif event.type == pygame.MOUSEBUTTONDOWN:
       mouse_x, mouse_y = event.pos
-      button_y = HEIGHT - 100
+
+      # 플레이어 아이콘 클릭 체크
+      player_y = 60
+      icon_y = player_y + 50
+      icon_size = 60
+      icon_spacing = 150
+      start_x = WIDTH//2 - (len(self.player_images) * icon_spacing - icon_spacing + icon_size) // 2
+
+      for i in range(len(self.player_images)):
+        icon_x = start_x + i * icon_spacing
+        icon_rect = pygame.Rect(icon_x, icon_y, icon_size, icon_size)
+
+        if icon_rect.collidepoint(mouse_x, mouse_y):
+          self.selected_player = i
+          return (None, None, None)
+
+      # 스테이지 버튼 클릭 체크
+      stage_y = icon_y + 120
+      button_y = stage_y - 100
       button_width = 120
       button_spacing = 140
       start_x = WIDTH//2 - (4 * button_spacing - button_spacing + button_width) // 2
@@ -187,5 +272,8 @@ class TitleScreen:
           self.active = False
           return ("start", self.selected_stage)
 
-    return (None, None)
+    return (None, None, None)
+
+  def get_selected_player_image(self):
+    return self.player_images[self.selected_player]
     

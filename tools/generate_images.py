@@ -830,22 +830,22 @@ def create_twin_demons(size=200):
 
 if __name__ == "__main__":
   print("게임 에셋 생성 start")
-  dragon = create_dragon_king(200)
-  dragon.save('assets/images/boss_stage1.png')
+  bg = create_cyberpunk_background(1000, 800)
+  bg.save('background.png')
+  # dragon = create_dragon_king(200)
+  # dragon.save('assets/images/boss_stage1.png')
   # cyber = create_cyber_beast(150)
   # cyber.save('assets/images/boss_stage2.png')
-  thunder = create_thunder_lord(200)
-  thunder.save('assets/images/boss_stage3.png')
-  demons = create_twin_demons(150)
-  demons.save('assets/images/boss_stage4.png')
+  # thunder = create_thunder_lord(200)
+  # thunder.save('assets/images/boss_stage3.png')
+  # demons = create_twin_demons(150)
+  # demons.save('assets/images/boss_stage4.png')
 
 
   # bullet = create_normal_bullet(16)
   # bullet.save('bullet_normal.png')
 
 """
-  bg = create_cyberpunk_background(800, 600)
-  bg.save('background.png')
 
   # === 드래곤 ===
   dragon = create_dragon_boss(150)

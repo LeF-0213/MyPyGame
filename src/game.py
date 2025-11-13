@@ -4,7 +4,7 @@ from .systems import *
 from .utils.constants import *
 
 class Game:
-  def __init__(self, difficulty=1, start_stage=1):
+  def __init__(self, difficulty=1, start_stage=1, player_img=None):
     pygame.init()
     pygame.font.init()
     self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -24,7 +24,7 @@ class Game:
 
     # 이미지 로드
     try:
-      self.player_img = pygame.image.load('assets/images/player.png').convert_alpha()
+      self.player_img = player_img
       self.boss1_img = pygame.image.load('assets/images/boss.png').convert_alpha()
       self.boss2_img = pygame.image.load('assets/images/boss_stage2.png').convert_alpha()
       self.boss3_img = pygame.image.load('assets/images/boss_stage3.png').convert_alpha()
@@ -367,6 +367,7 @@ class Game:
       title = TitleScreen(screen)
       title_running = True
       selected_stage = 1
+      selected_player = 0
 
       while title_running and title.active:
         dt = clock.tick(FPS) / 1000.0
@@ -376,9 +377,10 @@ class Game:
             running = False
             title_running = False
 
-          action, stage = title.handle_events(event)
+          action, stage, player = title.handle_events(event)
           if action == "start":
             selected_stage = stage
+            selected_player = player
             title_running = False
           elif action == "quit":
             running = False
@@ -391,10 +393,14 @@ class Game:
       if not running:
         break
 
+      # 선택된 플레이어 이미지 가져오기
+      player_image = title.get_selected_player_image()
+      player_name = title.player_names[selected_player]
+
       print(f"\n🎮 Starting Stage {selected_stage}...")
       print(f"Difficulty: {DIFFICULTY_LEVELS[selected_stage]['name']}\n")
       
-      game = Game(difficulty=1, start_stage=selected_stage)
+      game = Game(difficulty=1, start_stage=selected_stage, player_img=player_image)
       result = game.run()
       
       # 재시작하지 않으면 타이틀로
