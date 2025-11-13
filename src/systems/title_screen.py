@@ -168,7 +168,13 @@ def handle_events(self, event):
     if event.key == pygame.K_SPACE:
       self.active = False
       return("start", self.selected_stage)
-
     elif event.key == pygame.K_LEFT:
-      self.selected_stage = max()
+      self.selected_stage = max(1, self.selected_stage - 1)
+    elif event.key == pygame.K_RIGHT:
+      self.selected_stage = min(4, self.selected_stage + 1)
+    elif event.key == pygame.K_ESCAPE:
+      return ("quit", None)
+
+  elif event.type == pygame.MOUSEBUTTONDOWN:
+    pass
     

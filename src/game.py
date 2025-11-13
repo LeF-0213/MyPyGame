@@ -79,6 +79,18 @@ class Game:
 
       self.bosses.append(boss1)
       self.bosses.append(boss2)
+
+    elif boss_count == 3:
+      boss1 = Boss(WIDTH // 4, 150, self.boss_img, self.boss_bullet_img, stage)
+      boss2 = Boss(WIDTH * 2 // 4, 150, self.boss_img, self.boss_bullet_img, stage)
+      boss3 = Boss(WIDTH * 3 // 4, 150, self.boss_img, self.boss_bullet_img, stage)
+
+      boss2.attack_timer = config["cooldown"] * 2 / 3
+      boss3.attack_timer = config["cooldown"] * 3 / 4
+
+      self.bosses.append(boss1)
+      self.bosses.append(boss2)
+      self.bosses.append(boss3)
     
   # 다음 스테이지
   def next_stage(self):
