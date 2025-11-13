@@ -83,7 +83,7 @@ class BulletPattern:
 
     for i in range(count):
       angle = i * angle_step
-      bullet = HomingBullet(x, y, speed, angle, image, turn_speed = 2.0)
+      bullet = HomingBullet(x, y, speed, angle, image, turn_speed = 2.0, duration=5)
       bullet.set_target(target)
       bullets.append(bullet)
 

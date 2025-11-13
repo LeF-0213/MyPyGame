@@ -44,16 +44,23 @@ class AcceleratingBullet(Bullet):
     super().update(dt)
 
 class HomingBullet(Bullet):
-  def __init__(self, x, y, speed, angle, image=None, turn_speed=2.0):
+  def __init__(self, x, y, speed, angle, image=None, turn_speed=2.0, duration=5):
     super().__init__(x, y, speed, angle, image)
     self.turn_speed = turn_speed
     self.target = None
+    self.age = 0
+    self.duration = duration
 
   # 생성 시점에서 target을 정하면 유연성이 떨어짐
   def set_target(self, target):
     self.target = target
 
   def update(self, dt):
+    self.age += dt
+    if self.age >= self.duration:
+      self.active = False
+
+
     if self.target:
       dx = self.target.x - self.x
       dy = self.target.y - self.y
