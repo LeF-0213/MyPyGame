@@ -11,6 +11,7 @@ python과 pygame을 활용한 OOP 기반 탄막 슈팅 게임입니다.
 * **다양한 탄막 패턴**: 원형, 나선, 호밍, 레이저 등
 * **파워업 시스템**: 공격력 강화, 아이템, HP 회복
 * **3단계 페이즈 시스템**: 보스 HP에 따른 난이도 증가
+* **player 선택 시스템**: 마음에 드는 player 이미지 선택
 
 ## ✨ 주요 기능
 ![stage4_img](./assets/screenshots/stage4_img.png)
@@ -42,6 +43,14 @@ python과 pygame을 활용한 OOP 기반 탄막 슈팅 게임입니다.
 * **Power(P)**: 공격력 증가
 * **Item(I)**: 폭탄 획득
 * **HP(HP)**: 체력 회복
+
+### 플레이어 선택 시스템
+#### 플레이어1 - Black_Dragon
+<img src="./assets/screenshots/player1.png" alt="black_dragon" style="height: 200px; background-color: white; border-radius: 20px;">
+
+#### 플레이어2 - White_Dragon
+
+<img src="./assets/screenshots/player2.png" alt="black_dragon" style="height: 200px; background-color: white; border-radius: 20px;">
 
 #### Laser & Circle Pattern 예시
 ![laser](./assets/screenshots/laser_img.png)
