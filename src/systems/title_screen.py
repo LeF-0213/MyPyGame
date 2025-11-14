@@ -67,13 +67,13 @@ class TitleScreen:
       glow_surf = pygame.Surface((title_text.get_width() + i*10, title_text.get_height() + i*10), pygame.SRCALPHA)
       glow_text = self.title_font.render("CYBER SHOOTING", True, (*NEON_CYAN, pulse_alpha // (i*1)))
       glow_surf.blit(glow_text, (i*5, i*5))
-      self.screen.blit(glow_surf, (WIDTH//2 - title_text.get_width()//2 - i*5, 30 - i*5))
+      self.screen.blit(glow_surf, (WIDTH//2 - title_text.get_width()//2 - i*5, 50 - i*5))
     
-    self.screen.blit(title_text, (WIDTH//2 - title_text.get_width()//2, 30))
-    self.screen.blit(subtitle_text, (WIDTH//2 - subtitle_text.get_width()//2, 90))
+    self.screen.blit(title_text, (WIDTH//2 - title_text.get_width()//2, 50))
+    self.screen.blit(subtitle_text, (WIDTH//2 - subtitle_text.get_width()//2, 110))
 
     # === 플레이어 선택 ===
-    player_y = 350
+    player_y = 370
 
     player_title = self.menu_font.render("SELECT PLAYER", True, NEON_YELLOW)
     self.screen.blit(player_title, (WIDTH//2 - player_title.get_width()//2, player_y))
@@ -120,7 +120,7 @@ class TitleScreen:
       self.screen.blit(name_text, (icon_x + icon_size//2 - name_text.get_width()//2, icon_y + icon_size + 5))
 
     # === 게임 설명 ===
-    y_offset = 140
+    y_offset = 160
 
     instructions = [
       "CONTROLS",
@@ -155,7 +155,7 @@ class TitleScreen:
       self.screen.blit(text, (WIDTH//2 - text.get_width()//2, y_offset + i * 22))
 
     # === 스테이지 선택 ===
-    stage_y = HEIGHT - 300
+    stage_y = HEIGHT - 280
 
     stage_title = self.menu_font.render("SELECT STAGE", True, NEON_YELLOW)
     self.screen.blit(stage_title, (WIDTH//2 - stage_title.get_width()//2, stage_y))
@@ -214,12 +214,12 @@ class TitleScreen:
       if int(self.pulse * 2) % 2 == 0:
         start_text = self.subtitle_font.render("PRESS SPACE TO START", True, NEON_YELLOW)
 
-        self.screen.blit(start_text, (WIDTH//2 - start_text.get_width()//2, HEIGHT - 150))
+        self.screen.blit(start_text, (WIDTH//2 - start_text.get_width()//2, HEIGHT - 130))
 
       # 마우스 클릭 안내
       mouse_text = self.small_font.render("or click stage button", True, NEON_GREEN)
 
-      self.screen.blit(mouse_text, (WIDTH//2 - mouse_text.get_width()//2, HEIGHT - 100))
+      self.screen.blit(mouse_text, (WIDTH//2 - mouse_text.get_width()//2, HEIGHT - 80))
 
   def handle_events(self, event):
     if event.type == pygame.KEYDOWN:
@@ -231,9 +231,9 @@ class TitleScreen:
       elif event.key == pygame.K_RIGHT:
         self.selected_stage = min(4, self.selected_stage + 1)
       elif event.key == pygame.K_UP:
-        self.selected_player = min(1, self.selected_player - 1)
+        self.selected_player = (self.selected_player - 1) % len(self.player_images)
       elif event.key == pygame.K_DOWN:
-        self.selected_player = min(2, self.selected_player + 1)
+        self.selected_player = (self.selected_player + 1) % len(self.player_images)
       elif event.key == pygame.K_ESCAPE:
         return ("quit", None, None)
 
