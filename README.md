@@ -45,12 +45,12 @@ python과 pygame을 활용한 OOP 기반 탄막 슈팅 게임입니다.
 * **HP(HP)**: 체력 회복
 
 ### 플레이어 선택 시스템
-#### 플레이어1 - Black_Dragon
-<img src="./assets/screenshots/player1.png" alt="black_dragon" style="height: 200px; background-color: white; border-radius: 20px;">
-
-#### 플레이어2 - White_Dragon
-
-<img src="./assets/screenshots/player2.png" alt="black_dragon" style="height: 200px; background-color: white; border-radius: 20px;">
+#### 플레이어1 - Black_Dragon, 플레이어2 - White_Dragon
+<p align="center">  
+  <img src="./assets/screenshots/dragons.png">
+  <hr>
+  <p>Draw By - 먼지</p>
+</p>
 
 #### Laser & Circle Pattern 예시
 ![laser](./assets/screenshots/laser_img.png)

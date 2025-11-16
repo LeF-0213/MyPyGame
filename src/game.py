@@ -327,7 +327,6 @@ class Game:
           self.running = False
         elif event.key == pygame.K_r and self.game_over:
           self.running = False
-          # Game(self.difficulty, 1).run()
           return "restart"
         elif event.key == pygame.K_SPACE:
           if self.stage_clear:
@@ -340,7 +339,7 @@ class Game:
             self.enemy_bullets.clear()
             self.particles.emit(self.player.x, self.player.y, "explosion", 50)
 
-      return action
+    return action
 
   def run(self):
     while self.running:
@@ -357,6 +356,10 @@ class Game:
 
   def run_game_with_title(self):
     pygame.init()
+    pygame.font.init()
+
+    # 랭킹 시스템 초기화
+    ranking_system = RankingSystem()
 
     running = True
     while running:
@@ -369,6 +372,10 @@ class Game:
       selected_stage = 1
       selected_player = 0
 
+      # 랭킹 화면 표시 플래그
+      show_ranking = False
+
+      # 타이틀 화면 루프
       while title_running and title.active:
         dt = clock.tick(FPS) / 1000.0
 
@@ -378,33 +385,141 @@ class Game:
             title_running = False
 
           action, stage, player = title.handle_events(event)
+
           if action == "start":
             selected_stage = stage
             selected_player = player
             title_running = False
+            break
+
+          elif action == "ranking":
+            # 랭킹 화면 표시
+            show_ranking = True
+            break
+
           elif action == "quit":
             running = False
             title_running = False
 
-        title.update(dt)
-        title.draw()
-        pygame.display.flip()
+        if show_ranking:
+          print("🏆 Opening rankings...")
+          ranking_screen = RankingScreen(screen, ranking_system)
+          ranking_running = True
 
-      if not running:
-        break
+          while ranking_running and ranking_screen.active:
+            dt_rank = clock.tick(FPS) / 1000.0
 
-      # 선택된 플레이어 이미지 가져오기
-      player_image = title.get_selected_player_image()
-      player_name = title.player_names[selected_player]
+            for rank_event in pygame.event.get():
+              if rank_event.type == pygame.QUIT:
+                running = False
+                title_running = False
 
-      print(f"\n🎮 Starting Stage {selected_stage}...")
-      print(f"Difficulty: {DIFFICULTY_LEVELS[selected_stage]['name']}\n")
+              rank_action = ranking_screen.handle_events(rank_event)
+              if rank_action == "back":
+                show_ranking = False
+                ranking_running = False
+                print("⬅️ Returning to title...")
+
+            ranking_screen.update(dt_rank)
+            ranking_screen.draw()
+            pygame.display.flip()
+
+          # 랭킹 화면 종료 후 타이틀로 돌아가기
+          continue # 타이틀 루프 계속
+
+        # 타이틀 화면 그리기 (이벤트 처리 후)
+        if title_running and title.active:
+          title.update(dt)
+          title.draw()
+          pygame.display.flip()
+
+      # 게임 시작
+      if not title.active: 
+
+        # 선택된 플레이어 이미지 가져오기
+        player_image = title.get_selected_player_image()
+        player_name = title.player_names[selected_player]
+
+        print(f"\n🎮 Starting Stage {selected_stage}...")
+        print(f"Difficulty: {DIFFICULTY_LEVELS[selected_stage]['name']}\n")
+        print(f"Player: {player_name}\n")
+        
+        game = Game(difficulty=1, start_stage=selected_stage, player_img=player_image)
+        result = game.run()
+        
+        # 재시작하지 않으면 타이틀로
+        if result == "restart":
+          continue
       
-      game = Game(difficulty=1, start_stage=selected_stage, player_img=player_image)
-      result = game.run()
-      
-      # 재시작하지 않으면 타이틀로
-      if result != "restart":
+        # 게임 오버 시 점수 체크
+        if game.game_over or game.victory:
+          final_score = game.score
+          final_stage = game.current_stage
+
+          print(f"\nFinal Score: {int(final_score):,}")
+
+          # Top 10 진입 여부 확인
+          if ranking_system.is_high_score(final_score):
+            print("🎉 New High Score! Enter your name...")
+
+            # 게임 화면을 한 번만 그려서 저장
+            game.draw()
+            background_snapshot = screen.copy()  # 화면 캡처
+
+            # 이름 입력 화면
+            name_input = NameInputScreen(screen, final_score, final_stage, player_name)
+            name_running = True
+            player_name_input = None
+
+            while name_running and name_input.active:
+              dt_name = clock.tick(FPS) / 1000.0
+
+              for name_event in pygame.event.get():
+                if name_event.type == pygame.QUIT:
+                  running = False
+                  title_running = False
+
+                name_action, name_result = name_input.handle_events(name_event)
+                if name_action in ["submit", "skip"]:
+                  player_name_input = name_result
+                  name_running = False
+                  break
+
+              screen.blit(background_snapshot, (0, 0))
+              name_input.update(dt_name)
+              name_input.draw()
+              pygame.display.flip()
+
+            # 랭킹 등록
+            if player_name_input:
+              ranking_system.add_score(player_name_input, final_score, final_stage, player_name)
+              rank_pos = ranking_system.get_rank_position(final_score)
+              print(f"✨ Registered as Rank #{rank_pos}!")
+
+              # 등록 후 랭킹 화면 자동 표시
+              ranking_screen = RankingScreen(screen, ranking_system)
+              ranking_running = True
+
+              while ranking_running and ranking_screen.active:
+                dt_rank = clock.tick(FPS) / 1000.0
+
+                for rank_event in pygame.event.get():
+                  if rank_event.type == pygame.QUIT:
+                    running = False
+                    title_running = False
+
+                  rank_action = ranking_screen.handle_events(rank_event)
+                  if rank_action == "back":
+                    ranking_running = False
+                    break
+
+                if not ranking_running or not ranking_screen.active:
+                  break
+              
+                ranking_screen.update(dt_rank)
+                ranking_screen.draw()
+                pygame.display.flip()
+
         print("\n🎮 Returning to title screen...")
 
     pygame.quit()

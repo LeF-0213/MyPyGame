@@ -128,7 +128,7 @@ class TitleScreen:
       "  Mouse -------- Move           ",
       "  Space -------- Shoot          ",
       "  Shift -------- Slow Mode      ",
-      "  X -------- Use Item (Bomb)  ",
+      "  X -------- Use Item           ",
       "GAME INFO",
       "========================================",
       "Power-ups: [P] Power  [I] Item  [+] HP",
@@ -199,6 +199,37 @@ class TitleScreen:
       self.screen.blit(stage_text, (button_x + button_width//2 - stage_text.get_width()//2, button_y + 5))
       self.screen.blit(diff_text, (button_x + button_width//2 - diff_text.get_width()//2, button_y + 30))
 
+      # === 랭킹 버튼 ==
+      ranking_button_y = button_y + 170
+      ranking_button_width = 200
+      ranking_button_height = 50
+      ranking_button_x = WIDTH//2 - ranking_button_width//2
+
+      ranking_button_rect = pygame.Rect(ranking_button_x, ranking_button_y, ranking_button_width, ranking_button_height)
+
+      # 마우스 호버 체크
+      mouse_pos = pygame.mouse.get_pos()
+      is_hover = ranking_button_rect.collidepoint(mouse_pos)
+
+      if is_hover:
+        button_color = NEON_YELLOW
+        outline_width = 4
+        pulse_size = int(3 + math.sin(self.pulse * 3) * 2)
+
+        glow_rect = pygame.Rect(ranking_button_x - pulse_size, ranking_button_y - pulse_size,ranking_button_width + pulse_size*2, ranking_button_height + pulse_size*2)
+        glow_surf = pygame.Surface((glow_rect.width, glow_rect.height), pygame.SRCALPHA)
+        pygame.draw.rect(glow_surf, (*NEON_YELLOW, 100), (0, 0, glow_rect.width, glow_rect.height), border_radius=10)
+        self.screen.blit(glow_surf, glow_rect)
+      else:
+        button_color = NEON_PURPLE
+        outline_width = 2
+
+      pygame.draw.rect(self.screen, (30, 30, 50), ranking_button_rect, border_radius=10)
+      pygame.draw.rect(self.screen, button_color, ranking_button_rect, outline_width, border_radius=10)
+
+      ranking_text = self.menu_font.render("🏆 RANKINGS", True, button_color)
+      self.screen.blit(ranking_text, (ranking_button_x + ranking_button_width//2 - ranking_text.get_width()//2, ranking_button_y + ranking_button_height//2 - ranking_text.get_height()//2))
+
       # === 조작법 안내 ===
       controls_y = button_y + 80
       controls = [
@@ -219,7 +250,7 @@ class TitleScreen:
       # 마우스 클릭 안내
       mouse_text = self.small_font.render("or click stage button", True, NEON_GREEN)
 
-      self.screen.blit(mouse_text, (WIDTH//2 - mouse_text.get_width()//2, HEIGHT - 80))
+      self.screen.blit(mouse_text, (WIDTH//2 - mouse_text.get_width()//2, HEIGHT - 100))
 
   def handle_events(self, event):
     if event.type == pygame.KEYDOWN:
@@ -241,8 +272,20 @@ class TitleScreen:
     elif event.type == pygame.MOUSEBUTTONDOWN:
       mouse_x, mouse_y = event.pos
 
+      # 랭킹 버튼 클릭 체크
+      stage_y = 600
+      button_y = stage_y + 50
+      ranking_button_y = button_y + 80
+      ranking_button_width = 200
+      ranking_button_height = 50
+      ranking_button_x = WIDTH//2 - ranking_button_width//2
+      ranking_button_rect = pygame.Rect(ranking_button_x, ranking_button_y, ranking_button_width, ranking_button_height)
+
+      if ranking_button_rect.collidepoint(mouse_x, mouse_y):
+        return ("ranking", None, None)
+
       # 플레이어 아이콘 클릭 체크
-      player_y = 60
+      player_y = 370
       icon_y = player_y + 50
       icon_size = 60
       icon_spacing = 150
@@ -258,19 +301,19 @@ class TitleScreen:
 
       # 스테이지 버튼 클릭 체크
       stage_y = icon_y + 120
-      button_y = stage_y - 100
+      button_y = stage_y + 50
       button_width = 120
       button_spacing = 140
       start_x = WIDTH//2 - (4 * button_spacing - button_spacing + button_width) // 2
 
       for stage in range(1, 5):
         button_x = start_x + (stage - 1) * button_spacing
-        button_rect = pygame.Rect(button_x, button_y, button_width, 40)
+        button_rect = pygame.Rect(button_x - 20, button_y - 20, button_width + 20, 40)
 
         if button_rect.collidepoint(mouse_x, mouse_y):
           self.selected_stage = stage
           self.active = False
-          return ("start", self.selected_stage)
+          return ("start", self.selected_stage, self.selected_player)
 
     return (None, None, None)
 
