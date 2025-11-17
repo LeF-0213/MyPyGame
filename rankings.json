@@ -14,6 +14,20 @@
     "date": "2025-11-15 11:14"
   },
   {
+    "name": "aj!",
+    "score": 16495,
+    "stage": 3,
+    "character": "White_Dragon",
+    "date": "2025-11-16 17:28"
+  },
+  {
+    "name": "Park Joyeong",
+    "score": 16075,
+    "stage": 3,
+    "character": "Black_Dragon",
+    "date": "2025-11-17 12:03"
+  },
+  {
     "name": "test",
     "score": 321,
     "stage": 4,
@@ -33,5 +47,12 @@
     "stage": 4,
     "character": "Black_Dragon",
     "date": "2025-11-15 11:15"
+  },
+  {
+    "name": "Player",
+    "score": 172,
+    "stage": 4,
+    "character": "Black_Dragon",
+    "date": "2025-11-16 17:25"
   }
 ]
